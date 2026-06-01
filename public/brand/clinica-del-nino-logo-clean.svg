@@ -1,30 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 400 80" role="img" aria-label="Clínica del Niño SA">
-  <defs>
-    <clipPath id="cdn-mark">
-      <rect width="80" height="80" rx="0"/>
-    </clipPath>
-  </defs>
-  <!-- Símbolo CDN (recorte fiel del logo oficial PNG) -->
-  <g clip-path="url(#cdn-mark)">
-    <rect width="80" height="80" fill="#ffffff"/>
-    <image
-      href="/brand/clinica-del-nino-logo.png"
-      x="0"
-      y="0"
-      width="400"
-      height="80"
-      preserveAspectRatio="xMinYMid meet"
-    />
-  </g>
-  <!-- Barra y texto institucional (vector, nítido en cualquier tamaño) -->
-  <rect x="80" y="0" width="320" height="80" fill="#000000"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 50" role="img" aria-label="Clínica del Niño SA">
+  <!-- SVG autónomo (sin referencias externas). Uso principal: PNG en ClinicLogo.tsx -->
+  <rect width="250" height="50" fill="#000000"/>
   <text
-    x="96"
-    y="51"
+    x="58"
+    y="32"
     fill="#ffffff"
-    font-family="Arial, Helvetica, 'Segoe UI', sans-serif"
-    font-size="23"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="11"
     font-weight="700"
-    letter-spacing="0.07em"
+    letter-spacing="0.06em"
   >CLINICA DEL NIÑO SA</text>
 </svg>

@@ -1,18 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 80 80" role="img" aria-label="Clínica del Niño">
-  <defs>
-    <clipPath id="cdn-mark-only">
-      <rect width="80" height="80"/>
-    </clipPath>
-  </defs>
-  <g clip-path="url(#cdn-mark-only)">
-    <rect width="80" height="80" fill="#ffffff"/>
-    <image
-      href="/brand/clinica-del-nino-logo.png"
-      x="0"
-      y="0"
-      width="400"
-      height="80"
-      preserveAspectRatio="xMinYMid meet"
-    />
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" role="img" aria-label="Clínica del Niño">
+  <!-- Reservado; el componente ClinicLogo usa el PNG oficial con recorte CSS -->
+  <rect width="50" height="50" fill="#ffffff"/>
+  <rect x="38" y="8" width="8" height="34" fill="#000000"/>
 </svg>

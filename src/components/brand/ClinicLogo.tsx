@@ -1,31 +1,39 @@
-import { cn } from "@/lib/utils";
+"use client";
 
-const LOGO_FULL = "/brand/clinica-del-nino-logo-clean.svg";
-const LOGO_MARK = "/brand/clinica-del-nino-logo-mark.svg";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+
+/** Logo oficial en public/ — ruta absoluta desde la raíz del sitio */
+export const CLINIC_LOGO_PNG = "/brand/clinica-del-nino-logo.png";
 
 export type ClinicLogoVariant = "full" | "compact" | "mark";
 export type ClinicLogoTheme = "light" | "dark";
 
-const variantConfig: Record<
-  ClinicLogoVariant,
-  { src: string; alt: string; heightClass: string }
-> = {
-  full: {
-    src: LOGO_FULL,
-    alt: "Clínica del Niño SA — logo institucional",
-    heightClass: "h-9 w-auto md:h-11",
-  },
-  compact: {
-    src: LOGO_FULL,
-    alt: "Clínica del Niño SA",
-    heightClass: "h-8 w-auto sm:h-9",
-  },
-  mark: {
-    src: LOGO_MARK,
-    alt: "Clínica del Niño — símbolo CDN",
-    heightClass: "h-9 w-9 md:h-10 md:w-10",
-  },
+const altByVariant: Record<ClinicLogoVariant, string> = {
+  full: "Clínica del Niño SA",
+  compact: "Clínica del Niño SA",
+  mark: "Clínica del Niño",
 };
+
+function LogoFallback({
+  className,
+  compact,
+}: {
+  className?: string;
+  compact?: boolean;
+}) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center font-display font-bold leading-tight text-medical-deep",
+        compact ? "text-sm" : "text-base md:text-lg",
+        className
+      )}
+    >
+      Clínica del Niño
+    </span>
+  );
+}
 
 export function ClinicLogo({
   variant = "full",
@@ -38,25 +46,65 @@ export function ClinicLogo({
   className?: string;
   priority?: boolean;
 }) {
-  const config = variantConfig[variant];
+  const [failed, setFailed] = useState(false);
 
-  const logoImage = (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      src={config.src}
-      alt={config.alt}
-      width={variant === "mark" ? 80 : 280}
-      height={variant === "mark" ? 80 : 56}
-      loading={priority ? "eager" : "lazy"}
-      decoding="async"
-      className={cn(
-        "max-w-full object-contain object-left",
-        config.heightClass
-      )}
-    />
-  );
+  if (failed) {
+    return (
+      <LogoFallback
+        className={className}
+        compact={variant === "mark" || variant === "compact"}
+      />
+    );
+  }
 
-  if (theme === "dark") {
+  const alt = altByVariant[variant];
+  const imgProps = {
+    src: CLINIC_LOGO_PNG,
+    alt,
+    width: 250,
+    height: 50,
+    onError: () => setFailed(true),
+    loading: (priority ? "eager" : "lazy") as "eager" | "lazy",
+    decoding: "async" as const,
+    ...(priority ? { fetchPriority: "high" as const } : {}),
+  };
+
+  let content: React.ReactNode;
+
+  if (variant === "mark") {
+    content = (
+      <span
+        role="img"
+        aria-label={alt}
+        className={cn(
+          "inline-flex shrink-0 overflow-hidden rounded-sm bg-white",
+          "h-9 w-9 md:h-10 md:w-10",
+          className
+        )}
+      >
+        {/* Recorte del símbolo CDN (porción izquierda del logo horizontal) */}
+        <img
+          {...imgProps}
+          alt=""
+          aria-hidden
+          className="h-full w-auto max-w-none object-cover object-left"
+        />
+      </span>
+    );
+  } else {
+    content = (
+      <img
+        {...imgProps}
+        className={cn(
+          "max-w-full object-contain object-left",
+          variant === "full" ? "h-9 w-auto md:h-11" : "h-8 w-auto sm:h-9",
+          className
+        )}
+      />
+    );
+  }
+
+  if (theme === "dark" && variant !== "mark") {
     return (
       <span
         className={cn(
@@ -64,14 +112,16 @@ export function ClinicLogo({
           className
         )}
       >
-        {logoImage}
+        <img
+          {...imgProps}
+          className={cn(
+            "max-w-full object-contain object-left",
+            variant === "full" ? "h-9 w-auto md:h-11" : "h-8 w-auto sm:h-9"
+          )}
+        />
       </span>
     );
   }
 
-  return (
-    <span className={cn("inline-flex items-center", className)}>{logoImage}</span>
-  );
+  return content;
 }
-
-export const CLINIC_LOGO_PNG = "/brand/clinica-del-nino-logo.png";

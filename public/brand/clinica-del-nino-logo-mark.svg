@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 80 80" role="img" aria-label="Clínica del Niño">
+  <defs>
+    <clipPath id="cdn-mark-only">
+      <rect width="80" height="80"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#cdn-mark-only)">
+    <rect width="80" height="80" fill="#ffffff"/>
+    <image
+      href="/brand/clinica-del-nino-logo.png"
+      x="0"
+      y="0"
+      width="400"
+      height="80"
+      preserveAspectRatio="xMinYMid meet"
+    />
+  </g>
+</svg>

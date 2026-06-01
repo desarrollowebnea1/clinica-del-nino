@@ -1,5 +1,6 @@
 "use client";
 
+import { ClinicLogo } from "@/components/brand/ClinicLogo";
 import { Button } from "@/components/ui/Button";
 import { useSettings, useWhatsAppUrl } from "@/components/providers/SettingsProvider";
 import { cn } from "@/lib/utils";
@@ -46,14 +47,31 @@ export function Navbar() {
       )}
     >
       <nav className="section-container flex h-16 items-center justify-between gap-4 md:h-[4.5rem]">
-        <Link href="/" className="group min-w-0">
-          <p className="truncate font-display text-base font-bold tracking-tight text-medical-deep md:text-lg">
-            {settings.clinicName}
-          </p>
-          <p className="hidden items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-medical-teal sm:flex">
-            <Clock className="h-3 w-3" />
-            24 hs · Corrientes
-          </p>
+        <Link
+          href="/"
+          className="group flex min-w-0 max-w-[58%] items-center gap-3 sm:max-w-none"
+          aria-label={settings.clinicName}
+        >
+          <ClinicLogo
+            variant="mark"
+            priority
+            className="shrink-0 sm:hidden"
+          />
+          <ClinicLogo
+            variant="full"
+            priority
+            className="hidden shrink-0 sm:inline-flex"
+          />
+          <span className="sr-only">{settings.clinicName}</span>
+          <span className="hidden min-w-0 flex-col border-l border-medical-blue/10 pl-3 lg:flex">
+            <span className="truncate text-[10px] font-semibold uppercase tracking-wider text-medical-teal">
+              Pediatría institucional
+            </span>
+            <span className="flex items-center gap-1 text-[10px] font-medium text-text-muted">
+              <Clock className="h-3 w-3 text-medical-teal" />
+              24 hs · Corrientes
+            </span>
+          </span>
         </Link>
 
         <ul className="hidden items-center gap-6 lg:flex">

@@ -1,5 +1,6 @@
 "use client";
 
+import { ClinicLogo } from "@/components/brand/ClinicLogo";
 import { cn } from "@/lib/utils";
 import {
   Building2,
@@ -51,8 +52,8 @@ export function AdminShell({
   const NavContent = () => (
     <>
       <div className="border-b border-medical-blue/5 px-4 py-5">
-        <p className="font-display font-bold text-medical-blue">Clínica del Niño</p>
-        <p className="text-xs text-text-muted">Admin · {userName}</p>
+        <ClinicLogo variant="compact" className="max-w-[200px]" />
+        <p className="mt-2 text-xs text-text-muted">Panel admin · {userName}</p>
       </div>
       <nav className="flex-1 space-y-1 p-3">
         {navItems.map((item) => {
@@ -127,9 +128,8 @@ export function AdminShell({
           >
             <Menu className="h-5 w-5" />
           </button>
-          <span className="font-display text-sm font-semibold text-medical-blue">
-            Panel admin
-          </span>
+          <ClinicLogo variant="mark" className="h-8 w-8" />
+          <span className="sr-only">Panel admin Clínica del Niño</span>
         </header>
         <main className="flex-1 p-4 md:p-8">{children}</main>
       </div>

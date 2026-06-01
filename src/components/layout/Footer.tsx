@@ -1,5 +1,6 @@
 "use client";
 
+import { ClinicLogo } from "@/components/brand/ClinicLogo";
 import { useSettings, useWhatsAppUrl } from "@/components/providers/SettingsProvider";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { MapPin } from "lucide-react";
@@ -48,8 +49,11 @@ export function Footer() {
       <div className="section-container section-padding pb-10 pt-12">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-5">
-            <p className="font-display text-2xl font-bold">{settings.clinicName}</p>
-            <p className="mt-2 text-medical-teal">{settings.slogan}</p>
+            <ClinicLogo variant="full" theme="dark" />
+            <p className="sr-only">{settings.clinicName}</p>
+            <p className="mt-4 font-display text-lg font-semibold text-white/90">
+              {settings.slogan}
+            </p>
             <p className="mt-4 flex items-start gap-2 text-sm text-white/75">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-medical-teal" />
               <span>

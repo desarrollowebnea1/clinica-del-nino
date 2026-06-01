@@ -1,5 +1,6 @@
 "use client";
 
+import { ClinicLogo } from "@/components/brand/ClinicLogo";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { AlertTriangle, Lock, Mail } from "lucide-react";
@@ -46,11 +47,11 @@ function LoginForm() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-surface-soft p-4">
       <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <p className="font-display text-2xl font-bold text-medical-blue">
-            Clínica del Niño
+        <div className="mb-8 flex flex-col items-center text-center">
+          <ClinicLogo variant="full" priority className="mx-auto max-w-[min(100%,280px)]" />
+          <p className="mt-4 text-sm font-medium text-text-muted">
+            Panel de administración
           </p>
-          <p className="mt-1 text-sm text-text-muted">Panel de administración</p>
         </div>
 
         <Card padding="lg" className="shadow-card">

@@ -1,3 +1,4 @@
+import { ClinicLogo } from "@/components/brand/ClinicLogo";
 import { Button } from "@/components/ui/Button";
 import { HeroVisual } from "@/components/home/HeroVisual";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
@@ -52,10 +53,13 @@ export function Hero({
       <div className="section-container relative pt-24 pb-12 md:pt-28 md:pb-16 lg:pb-20">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-16">
           <div className="animate-fade-in">
-            <p className="inline-flex items-center gap-2 rounded-full border border-medical-deep/10 bg-white/90 px-4 py-2 text-xs font-bold uppercase tracking-wider text-medical-blue shadow-soft">
-              <span className="h-2 w-2 rounded-full bg-health-green" />
-              Corrientes Capital · Pediatría institucional
-            </p>
+            <div className="inline-flex flex-wrap items-center gap-3 rounded-2xl border border-medical-deep/10 bg-white/90 px-3 py-2 shadow-soft sm:gap-4 sm:px-4">
+              <ClinicLogo variant="mark" className="h-8 w-8 shrink-0 opacity-95" />
+              <p className="text-xs font-bold uppercase tracking-wider text-medical-blue">
+                <span className="mr-1.5 inline-block h-2 w-2 rounded-full bg-health-green align-middle" />
+                Corrientes Capital · Pediatría institucional
+              </p>
+            </div>
 
             <h1 className="mt-5 font-display text-4xl font-extrabold leading-[1.08] tracking-tight text-medical-deep sm:text-5xl lg:text-[3.25rem]">
               {title}

@@ -38,14 +38,15 @@ export async function PUT(request: Request) {
   const body = await request.json();
   if (!body.id) return apiError("ID requerido");
 
+  const data: Record<string, unknown> = {};
+  if (body.question !== undefined) data.question = body.question;
+  if (body.answer !== undefined) data.answer = body.answer;
+  if (body.active !== undefined) data.active = body.active;
+  if (body.sortOrder !== undefined) data.sortOrder = Number(body.sortOrder);
+
   const faq = await prisma.fAQ.update({
     where: { id: body.id },
-    data: {
-      question: body.question,
-      answer: body.answer,
-      active: body.active,
-      sortOrder: body.sortOrder,
-    },
+    data,
   });
 
   return apiSuccess(faq);

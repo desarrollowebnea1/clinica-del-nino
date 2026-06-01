@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { put } from "@vercel/blob";
 
 const MAX_SIZE = 5 * 1024 * 1024;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
 
 export async function GET(request: Request) {
   const { error } = await requireAdminSession();
@@ -33,7 +33,8 @@ export async function POST(request: Request) {
 
     if (!file) return apiError("Archivo requerido");
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    const mime = file.type.toLowerCase();
+    if (!mime.startsWith("image/") && !ALLOWED_TYPES.includes(mime)) {
       return apiError("Formato no permitido. Usá JPG, PNG o WEBP.");
     }
 

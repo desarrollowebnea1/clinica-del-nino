@@ -2,13 +2,14 @@
 
 import { useWhatsAppUrl } from "@/components/providers/SettingsProvider";
 import { Button } from "@/components/ui/Button";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-import { ArrowRight, HeartPulse, MessageCircle, Users } from "lucide-react";
+import { ArrowRight, HeartPulse, Users } from "lucide-react";
 
 const steps = [
   {
     step: "01",
-    icon: MessageCircle,
+    whatsappStep: true,
     title: "Escribinos por WhatsApp",
     description:
       "Consultá guardia, internación, vacunatorio u obras sociales. Te orientamos sobre el mejor camino.",
@@ -59,7 +60,11 @@ export function QuickActionSection({ whatsappNumber }: { whatsappNumber: string 
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-medical-deep text-white shadow-soft">
-                  <item.icon className="h-6 w-6" />
+                  {"whatsappStep" in item && item.whatsappStep ? (
+                    <WhatsAppIcon size={26} />
+                  ) : (
+                    item.icon && <item.icon className="h-6 w-6" />
+                  )}
                 </div>
                 <span className="font-display text-3xl font-bold text-medical-blue/10">
                   {item.step}
@@ -79,7 +84,7 @@ export function QuickActionSection({ whatsappNumber }: { whatsappNumber: string 
                   external
                   className="mt-5 w-full sm:w-auto"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <WhatsAppIcon size={18} />
                   WhatsApp 24 hs
                 </Button>
               )}

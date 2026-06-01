@@ -6,7 +6,8 @@ import { cn } from "@/lib/utils";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import type { Service } from "@prisma/client";
 import Image from "next/image";
-import { ArrowUpRight, MessageCircle } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { ArrowUpRight } from "lucide-react";
 
 export function ServicesSection({
   services,
@@ -103,7 +104,7 @@ export function ServicesSection({
                     external
                     className="mt-5 w-full"
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <WhatsAppIcon size={18} />
                     Consultar por este servicio
                     <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
                   </Button>

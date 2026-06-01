@@ -3,7 +3,8 @@
 import { Button } from "@/components/ui/Button";
 import { useSettings, useWhatsAppUrl } from "@/components/providers/SettingsProvider";
 import { cn } from "@/lib/utils";
-import { Clock, Menu, MessageCircle, X } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { Clock, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -70,7 +71,7 @@ export function Navbar() {
 
         <div className="hidden items-center gap-2 lg:flex">
           <Button variant="whatsapp" size="sm" href={waUrl} external>
-            <MessageCircle className="h-4 w-4" />
+            <WhatsAppIcon size={18} />
             WhatsApp 24 hs
           </Button>
         </div>
@@ -114,7 +115,7 @@ export function Navbar() {
         </ul>
         <div className="border-t border-medical-blue/10 p-4">
           <Button variant="whatsapp" size="lg" href={waUrl} external className="w-full">
-            <MessageCircle className="h-5 w-5" />
+            <WhatsAppIcon size={20} />
             WhatsApp 24 hs
           </Button>
         </div>

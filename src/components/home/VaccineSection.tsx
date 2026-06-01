@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import type { VaccineContent } from "@prisma/client";
-import { Calendar, FileText, MessageCircle, Shield, Syringe } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { Calendar, FileText, Shield, Syringe } from "lucide-react";
 
 export function VaccineSection({
   vaccine,
@@ -61,7 +62,7 @@ export function VaccineSection({
               className="mt-4 [&_h2]:text-left"
             />
             <Button variant="whatsapp" size="lg" href={waUrl} external className="mt-6">
-              <MessageCircle className="h-5 w-5" />
+              <WhatsAppIcon size={22} />
               Consultar vacunatorio
             </Button>
           </div>

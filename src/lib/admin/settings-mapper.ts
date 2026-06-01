@@ -1,3 +1,5 @@
+import { sanitizeGoogleMapsEmbedUrl } from "@/lib/maps-embed";
+
 export type ClinicSettingsForm = {
   clinicName: string;
   slogan: string;
@@ -61,7 +63,7 @@ export function settingsToDbPayload(form: ClinicSettingsForm) {
     facebookUrl: form.facebookUrl.trim() || null,
     address: form.address.trim(),
     mapsUrl: form.mapsUrl.trim() || null,
-    mapsEmbedUrl: form.mapsEmbedUrl.trim() || null,
+    mapsEmbedUrl: sanitizeGoogleMapsEmbedUrl(form.mapsEmbedUrl),
     heroTitle: form.heroTitle.trim(),
     heroSubtitle: form.heroSubtitle.trim(),
     heroDescription: form.heroDescription.trim(),

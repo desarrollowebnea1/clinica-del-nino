@@ -62,3 +62,7 @@ export function buildAdminReplyMessage(
 ): string {
   return `Hola ${guardianName}, somos de Clínica del Niño. Recibimos tu solicitud ${inquiryCode}. Te escribimos para coordinar la atención.`;
 }
+
+export function buildInquiryStatusWhatsAppMessage(inquiryCode: string): string {
+  return `Hola Clínica del Niño, quiero consultar el estado de mi solicitud ${inquiryCode}.`;
+}

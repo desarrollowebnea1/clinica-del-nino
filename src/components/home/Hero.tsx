@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/Button";
 import { HeroVisual } from "@/components/home/HeroVisual";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import {
   Calendar,
   Clock,
   MapPin,
-  MessageCircle,
   Shield,
   Stethoscope,
   Syringe,
@@ -80,7 +80,7 @@ export function Hero({
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Button variant="whatsapp" size="lg" href={waUrl} external className="sm:min-w-[200px]">
-                <MessageCircle className="h-5 w-5" />
+                <WhatsAppIcon size={22} />
                 WhatsApp 24 hs
               </Button>
               <Button

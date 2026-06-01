@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/Button";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { SectionHeading } from "@/components/home/SectionHeading";
+import { sanitizeGoogleMapsEmbedUrl } from "@/lib/maps-embed";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
-import { Clock, MapPin, MessageCircle, Navigation } from "lucide-react";
+import { Clock, MapPin, Navigation } from "lucide-react";
 
 export function LocationSection({
   address,
@@ -16,6 +18,7 @@ export function LocationSection({
   openingHours: Record<string, string>;
   whatsappNumber: string;
 }) {
+  const embedSrc = sanitizeGoogleMapsEmbedUrl(mapsEmbedUrl);
   const waUrl = buildWhatsAppUrl(
     whatsappNumber,
     "Hola Clínica del Niño, quiero consultar la ubicación y cómo llegar."
@@ -81,19 +84,20 @@ export function LocationSection({
                 </Button>
               )}
               <Button variant="whatsapp" href={waUrl} external className="flex-1">
-                <MessageCircle className="h-4 w-4" />
+                <WhatsAppIcon size={18} />
                 Consultar por WhatsApp
               </Button>
             </div>
           </div>
 
           <div className="overflow-hidden rounded-3xl border border-medical-blue/10 shadow-card">
-            {mapsEmbedUrl ? (
+            {embedSrc ? (
               <iframe
-                src={mapsEmbedUrl}
-                className="h-full min-h-[360px] w-full"
+                src={embedSrc}
+                className="h-full min-h-[360px] w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
                 title="Ubicación Clínica del Niño en Corrientes Capital"
               />
             ) : (
@@ -102,16 +106,23 @@ export function LocationSection({
                   <MapPin className="h-8 w-8 text-medical-teal" />
                 </div>
                 <p className="mt-5 font-display text-lg font-bold text-medical-deep">
-                  Mapa en actualización
+                  Ver ubicación en Google Maps
                 </p>
                 <p className="mt-2 max-w-sm text-sm leading-relaxed text-text-muted">
-                  Consultá la ubicación exacta y cómo llegar escribiendo por
-                  WhatsApp. Te orientamos con la dirección en Corrientes Capital.
+                  Abrí el mapa para ver la dirección exacta en Corrientes Capital o
+                  escribinos por WhatsApp para orientarte.
                 </p>
-                <Button variant="whatsapp" href={waUrl} external className="mt-6">
-                  <MessageCircle className="h-4 w-4" />
-                  Consultar ubicación por WhatsApp
-                </Button>
+                {mapsUrl ? (
+                  <Button variant="primary" href={mapsUrl} external className="mt-6">
+                    <Navigation className="h-4 w-4" />
+                    Abrir en Google Maps
+                  </Button>
+                ) : (
+                  <Button variant="whatsapp" href={waUrl} external className="mt-6">
+                    <WhatsAppIcon size={18} />
+                    Consultar ubicación por WhatsApp
+                  </Button>
+                )}
               </div>
             )}
           </div>

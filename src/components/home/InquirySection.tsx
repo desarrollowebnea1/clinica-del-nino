@@ -1,7 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
+import { InquiryStatusPanel } from "@/components/home/InquiryStatusPanel";
 import { SectionHeading } from "@/components/home/SectionHeading";
+import { Button } from "@/components/ui/Button";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import {
+  LAST_INQUIRY_CODE_KEY,
+  type InquiryStatusData,
+} from "@/lib/inquiry-status";
 import { cn } from "@/lib/utils";
 import type { Service } from "@prisma/client";
 import {
@@ -9,11 +15,10 @@ import {
   CheckCircle2,
   Clock,
   Hash,
-  MessageCircle,
   Search,
   Shield,
 } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const INITIAL_FORM = {
   childName: "",
@@ -28,7 +33,13 @@ const INITIAL_FORM = {
 
 const API_INQUIRIES = "/api/public/inquiries";
 
-export function InquirySection({ services }: { services: Service[] }) {
+export function InquirySection({
+  services,
+  whatsappNumber,
+}: {
+  services: Service[];
+  whatsappNumber: string;
+}) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -40,12 +51,45 @@ export function InquirySection({ services }: { services: Service[] }) {
   const [statusCode, setStatusCode] = useState("");
   const [statusLoading, setStatusLoading] = useState(false);
   const [statusError, setStatusError] = useState<string | null>(null);
-  const [statusResult, setStatusResult] = useState<{
-    status: string;
-    serviceRequested: string;
-  } | null>(null);
+  const [statusResult, setStatusResult] = useState<InquiryStatusData | null>(null);
+  const [lastSavedCode, setLastSavedCode] = useState<string | null>(null);
 
   const successRef = useRef<HTMLDivElement>(null);
+  const statusPanelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(LAST_INQUIRY_CODE_KEY);
+      if (saved) {
+        setLastSavedCode(saved);
+        setStatusCode((prev) => prev || saved);
+      }
+    } catch {
+      /* localStorage no disponible */
+    }
+  }, []);
+
+  function persistLastCode(code: string) {
+    try {
+      localStorage.setItem(LAST_INQUIRY_CODE_KEY, code);
+      setLastSavedCode(code);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function fetchStatus(code: string) {
+    const res = await fetch(
+      `/api/public/inquiries/${encodeURIComponent(code.toUpperCase())}`
+    );
+    const json = await res.json();
+
+    if (!res.ok || !json.success) {
+      throw new Error(json.error || "No encontramos una solicitud con ese código.");
+    }
+
+    return json.data as InquiryStatusData;
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -62,7 +106,11 @@ export function InquirySection({ services }: { services: Service[] }) {
         body: JSON.stringify(form),
       });
 
-      let json: { success?: boolean; error?: string; data?: { inquiry: { inquiryCode: string }; whatsappUrl: string | null } };
+      let json: {
+        success?: boolean;
+        error?: string;
+        data?: { inquiry: { inquiryCode: string }; whatsappUrl: string | null };
+      };
       try {
         json = await res.json();
       } catch {
@@ -84,6 +132,7 @@ export function InquirySection({ services }: { services: Service[] }) {
       setSubmitted(true);
       setForm(INITIAL_FORM);
       setStatusCode(code);
+      persistLastCode(code);
 
       requestAnimationFrame(() => {
         successRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -110,39 +159,58 @@ export function InquirySection({ services }: { services: Service[] }) {
 
   async function checkStatus(e: React.FormEvent) {
     e.preventDefault();
-    const code = statusCode.trim();
-    if (!code) return;
+    const code = statusCode.trim().toUpperCase();
+
+    if (!code) {
+      setStatusError("Ingresá el código de tu solicitud (ej: CDN-20260601-0001).");
+      setStatusResult(null);
+      return;
+    }
 
     setStatusLoading(true);
     setStatusError(null);
     setStatusResult(null);
 
     try {
-      const res = await fetch(
-        `/api/public/inquiries/${encodeURIComponent(code)}`
+      const data = await fetchStatus(code);
+      setStatusResult(data);
+      persistLastCode(code);
+
+      requestAnimationFrame(() => {
+        statusPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    } catch (err) {
+      setStatusError(
+        err instanceof Error
+          ? err.message
+          : "No encontramos una solicitud con ese código. Verificá e intentá de nuevo."
       );
-      const json = await res.json();
-
-      if (!res.ok || !json.success) {
-        setStatusError(json.error || "Solicitud no encontrada");
-        return;
-      }
-
-      setStatusResult(json.data);
-    } catch {
-      setStatusError("Error de conexión. Intentá nuevamente.");
     } finally {
       setStatusLoading(false);
     }
   }
 
-  const statusLabels: Record<string, string> = {
-    NUEVA: "Nueva",
-    CONTACTADA: "Contactada",
-    EN_SEGUIMIENTO: "En seguimiento",
-    RESUELTA: "Resuelta",
-    CANCELADA: "Cancelada",
-  };
+  async function loadLastInquiry() {
+    if (!lastSavedCode) return;
+    setStatusCode(lastSavedCode);
+    setStatusLoading(true);
+    setStatusError(null);
+    setStatusResult(null);
+
+    try {
+      const data = await fetchStatus(lastSavedCode);
+      setStatusResult(data);
+      requestAnimationFrame(() => {
+        statusPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    } catch (err) {
+      setStatusError(
+        err instanceof Error ? err.message : "No pudimos cargar tu última solicitud."
+      );
+    } finally {
+      setStatusLoading(false);
+    }
+  }
 
   const trustItems = [
     {
@@ -156,9 +224,10 @@ export function InquirySection({ services }: { services: Service[] }) {
       text: "Recibís un código CDN para consultar el estado cuando quieras.",
     },
     {
-      icon: MessageCircle,
+      icon: WhatsAppIcon,
       title: "Respuesta por WhatsApp",
       text: "Te redirigimos con el mensaje listo para coordinar la atención.",
+      isWhatsApp: true,
     },
     {
       icon: Clock,
@@ -193,7 +262,11 @@ export function InquirySection({ services }: { services: Service[] }) {
                 {trustItems.map((item) => (
                   <li key={item.title} className="flex gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                      <item.icon className="h-5 w-5 text-medical-teal" />
+                      {"isWhatsApp" in item && item.isWhatsApp ? (
+                        <WhatsAppIcon size={20} variant="brand" />
+                      ) : (
+                        <item.icon className="h-5 w-5 text-medical-teal" />
+                      )}
                     </div>
                     <div>
                       <p className="text-sm font-semibold">{item.title}</p>
@@ -231,7 +304,7 @@ export function InquirySection({ services }: { services: Service[] }) {
                     </p>
                     <p className="mt-2 text-sm leading-relaxed text-text-muted">
                       Te redirigimos a WhatsApp para completar el envío del
-                      mensaje.
+                      mensaje. Podés consultar el estado con ese código cuando quieras.
                     </p>
                     {success.whatsappUrl && (
                       <Button
@@ -241,7 +314,7 @@ export function InquirySection({ services }: { services: Service[] }) {
                         external
                         className="mt-4 w-full sm:w-auto"
                       >
-                        <MessageCircle className="h-4 w-4" />
+                        <WhatsAppIcon size={18} />
                         Abrir WhatsApp
                       </Button>
                     )}
@@ -383,21 +456,45 @@ export function InquirySection({ services }: { services: Service[] }) {
               </fieldset>
             </form>
 
-            <div className="mt-6 rounded-2xl border border-medical-blue/10 bg-white p-5 shadow-soft">
-              <p className="font-display font-semibold text-medical-deep">
+            <div className="mt-6 rounded-2xl border border-medical-blue/10 bg-white p-5 shadow-soft md:p-6">
+              <p className="font-display text-lg font-semibold text-medical-deep">
                 Consultar estado de solicitud
               </p>
-              <form onSubmit={checkStatus} className="mt-3 flex flex-col gap-2 sm:flex-row">
+              <p className="mt-1 text-sm text-text-muted">
+                Ingresá el código CDN que recibiste al enviar la solicitud.
+              </p>
+
+              {lastSavedCode && !statusResult && (
+                <button
+                  type="button"
+                  onClick={loadLastInquiry}
+                  disabled={statusLoading}
+                  className="mt-3 w-full rounded-xl border border-medical-teal/30 bg-medical-sky/40 px-4 py-3 text-left text-sm transition hover:bg-medical-sky/70 disabled:opacity-60"
+                >
+                  <span className="font-semibold text-medical-deep">
+                    Tu última solicitud
+                  </span>
+                  <span className="mt-0.5 block font-mono text-medical-teal">
+                    {lastSavedCode}
+                  </span>
+                  <span className="mt-1 text-xs text-text-muted">
+                    Tocá para ver el estado actual
+                  </span>
+                </button>
+              )}
+
+              <form onSubmit={checkStatus} className="mt-4 flex flex-col gap-2 sm:flex-row">
                 <input
                   placeholder="Ej: CDN-20260601-0001"
                   value={statusCode}
-                  onChange={(e) => setStatusCode(e.target.value)}
-                  className="input-field flex-1 text-sm"
+                  onChange={(e) => setStatusCode(e.target.value.toUpperCase())}
+                  className="input-field flex-1 font-mono text-sm uppercase"
                   disabled={statusLoading}
+                  aria-invalid={!!statusError}
                 />
                 <Button
                   type="submit"
-                  variant="outline"
+                  variant="primary"
                   size="md"
                   className="shrink-0"
                   disabled={statusLoading}
@@ -406,19 +503,25 @@ export function InquirySection({ services }: { services: Service[] }) {
                   {statusLoading ? "Consultando..." : "Consultar"}
                 </Button>
               </form>
+
               {statusError && (
-                <p className="mt-3 text-sm text-medical-coral">{statusError}</p>
+                <div
+                  role="alert"
+                  className="mt-4 flex gap-2 rounded-xl border border-medical-coral/30 bg-medical-coral/10 px-4 py-3 text-sm text-medical-deep"
+                >
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-medical-coral" />
+                  {statusError}
+                </div>
               )}
-              {statusResult && (
-                <p className="mt-3 rounded-xl bg-medical-sky/50 px-4 py-3 text-sm text-medical-deep">
-                  Estado:{" "}
-                  <strong>
-                    {statusLabels[statusResult.status] || statusResult.status}
-                  </strong>
-                  {" · "}
-                  Servicio: {statusResult.serviceRequested}
-                </p>
-              )}
+
+              <div ref={statusPanelRef}>
+                {statusResult && (
+                  <InquiryStatusPanel
+                    inquiry={statusResult}
+                    whatsappNumber={whatsappNumber}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>

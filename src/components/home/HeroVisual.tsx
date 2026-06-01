@@ -4,6 +4,7 @@ import {
   Building2,
   Clock,
   HeartPulse,
+  Scissors,
   Syringe,
 } from "lucide-react";
 import Image from "next/image";
@@ -13,6 +14,7 @@ const capabilities = [
   { icon: Building2, label: "Internación", accent: "bg-medical-sky text-medical-blue" },
   { icon: Syringe, label: "Vacunatorio", accent: "bg-medical-teal/15 text-medical-teal" },
   { icon: Baby, label: "Neonatología", accent: "bg-medical-sky text-medical-blue" },
+  { icon: Scissors, label: "Cirugías", accent: "bg-medical-coral/15 text-medical-coral" },
   { icon: Activity, label: "Terapia intensiva", accent: "bg-medical-deep/10 text-medical-deep" },
 ];
 

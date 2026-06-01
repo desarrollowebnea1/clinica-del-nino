@@ -96,7 +96,6 @@ export default function AdminSettingsPage() {
     { key: "facebookUrl", label: "Facebook URL" },
     { key: "address", label: "Dirección" },
     { key: "mapsUrl", label: "Google Maps URL (cómo llegar)" },
-    { key: "mapsEmbedUrl", label: "Google Maps embed URL (iframe)" },
     { key: "heroTitle", label: "Hero título" },
     { key: "heroSubtitle", label: "Hero subtítulo" },
     { key: "heroDescription", label: "Hero descripción", multiline: true },
@@ -164,6 +163,26 @@ export default function AdminSettingsPage() {
             )}
           </div>
         ))}
+
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-medical-deep">
+            Google Maps embed (mapa en la web)
+          </label>
+          <textarea
+            rows={3}
+            value={form.mapsEmbedUrl}
+            onChange={(e) => setForm({ ...form, mapsEmbedUrl: e.target.value })}
+            className="input-field resize-none font-mono text-sm"
+            placeholder="https://www.google.com/maps/embed?pb=..."
+          />
+          <p className="mt-1.5 text-xs leading-relaxed text-text-muted">
+            Pegá solo la URL que empieza con{" "}
+            <code className="rounded bg-medical-sky/50 px-1">
+              https://www.google.com/maps/embed?pb=...
+            </code>{" "}
+            o el iframe completo; el sistema extrae el src automáticamente.
+          </p>
+        </div>
 
         <div>
           <label className="mb-1.5 block text-sm font-medium text-medical-deep">

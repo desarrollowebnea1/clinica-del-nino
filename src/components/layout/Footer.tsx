@@ -1,7 +1,8 @@
 "use client";
 
 import { useSettings, useWhatsAppUrl } from "@/components/providers/SettingsProvider";
-import { MapPin, MessageCircle } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { MapPin } from "lucide-react";
 import Link from "next/link";
 
 const footerLinks = [
@@ -38,7 +39,7 @@ export function Footer() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-2xl bg-[#25D366] px-6 py-3.5 text-sm font-semibold text-white shadow-soft transition hover:bg-[#20BD5A]"
           >
-            <MessageCircle className="h-5 w-5" />
+            <WhatsAppIcon size={22} />
             WhatsApp 24 hs
           </a>
         </div>
@@ -75,7 +76,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-medium text-white hover:text-medical-teal"
                 >
-                  <MessageCircle className="h-4 w-4" />
+                  <WhatsAppIcon size={18} />
                   WhatsApp 24 hs
                 </a>
               </li>

@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/Button";
 import { SectionHeading } from "@/components/home/SectionHeading";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import type { InsuranceProvider } from "@prisma/client";
-import { Info, MessageCircle, Search, Shield } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { Info, Search, Shield } from "lucide-react";
 import { useMemo, useState } from "react";
 
 export function InsuranceSection({
@@ -57,7 +58,7 @@ export function InsuranceSection({
                 </div>
               </div>
               <Button variant="whatsapp" size="lg" href={waUrl} external className="w-full sm:w-auto">
-                <MessageCircle className="h-5 w-5" />
+                <WhatsAppIcon size={22} />
                 Consultar cobertura por WhatsApp
               </Button>
             </div>

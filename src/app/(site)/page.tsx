@@ -123,7 +123,7 @@ export default async function HomePage() {
         />
       )}
 
-      <InquirySection services={services} />
+      <InquirySection services={services} whatsappNumber={whatsappNumber} />
 
       <LocationSection
         address={settings?.address ?? "Corrientes Capital, Argentina"}
